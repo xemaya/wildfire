@@ -1,0 +1,84 @@
+/* =====================================================
+   reset + mobile base
+   ===================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #app {
+  width: 100%;
+  height: 100%;
+  /* dvh = dynamic vh, accounts for mobile URL bar */
+  height: 100dvh;
+  overflow: hidden;
+  /* prevent iOS pull-to-refresh / overscroll */
+  overscroll-behavior: none;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  background: var(--char-coal);
+}
+
+body {
+  font-family: var(--f-body-cn);
+  color: var(--kraft-light);
+  background:
+    radial-gradient(ellipse 70% 50% at 14% 4%, rgba(244,212,151,.18), transparent 55%),
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(10,7,4,.6), transparent 70%),
+    var(--noise-char),
+    linear-gradient(180deg, #15110c 0%, #1d1812 50%, #130e08 100%);
+  background-attachment: fixed;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* fixed scanlines overlay across the whole app */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  background: repeating-linear-gradient(180deg, transparent 0 2px, rgba(0,0,0,.035) 2px 3px);
+  mix-blend-mode: overlay;
+}
+
+#app {
+  position: relative;
+  z-index: 1;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}

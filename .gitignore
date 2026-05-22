@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+
+# build output
+web/dist/
+dist/
+
+# secrets / local env (keep *.env.example)
+.env
+**/.env
+
+# os
+.DS_Store
+**/.DS_Store
+
+# logs
+*.log
+
+# tooling / test artifacts
+.playwright-mcp/

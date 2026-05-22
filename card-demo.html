@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>星火 Wildfire · Card · 持久战</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="./fonts.css">
+<style>
+/* =====================================================
+   TOKENS
+   ===================================================== */
+:root{
+  --ink-black:#14110d;
+  --char-coal:#1b1611;
+  --kraft:#d4b886;
+  --kraft-deep:#b09668;
+  --kraft-darker:#9a8050;
+  --kraft-light:#e8d6ad;
+  --kraft-cream:#ecdcaf;
+  --kraft-shadow:#8c7549;
+  --kraft-edge:#5d4a2c;
+  --rust:#9b2a1a;
+  --rust-bright:#b53221;
+  --rust-deep:#5e1a10;
+  --army:#4d5238;
+  --army-deep:#2f3322;
+  --ink-hand:#2e2418;
+
+  --f-display-cn:"ZCOOL XiaoWei","Noto Serif SC",serif;
+  --f-body-cn:"Noto Serif SC",serif;
+  --f-display-en:"IM Fell English SC",serif;
+  --f-body-en:"IM Fell English",serif;
+  --f-mono:"Special Elite","Courier New",monospace;
+
+  --noise-kraft:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.27 0 0 0 0 0.13 0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  --noise-char:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0 0.04 0 0 0 0.45 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse 65% 50% at 14% 6%, rgba(244,212,151,.22), transparent 55%),
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(10,7,4,.6), transparent 70%),
+    var(--noise-char),
+    linear-gradient(180deg, #15110c 0%, #1d1812 50%, #130e08 100%);
+  background-attachment:fixed;
+  font-family:var(--f-body-cn);
+  color:var(--kraft-light);
+  padding:56px 24px 96px;
+  display:flex;flex-direction:column;align-items:center;gap:32px;
+  position:relative;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:100;
+  background:repeating-linear-gradient(180deg, transparent 0 2px, rgba(0,0,0,.04) 2px 3px);
+  mix-blend-mode:overlay;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.45;
+  background:
+    repeating-linear-gradient(94deg, rgba(40,28,16,0) 0 30px, rgba(40,28,16,.07) 30px 31px, rgba(40,28,16,0) 31px 60px),
+    repeating-linear-gradient(2deg, rgba(0,0,0,0) 0 80px, rgba(0,0,0,.05) 80px 82px);
+}
+
+/* =====================================================
+   STAGE META
+   ===================================================== */
+.meta{
+  width:100%;max-width:540px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.32em;
+  color:var(--kraft-shadow);text-transform:uppercase;
+}
+.meta .pulse::before{
+  content:"●";color:var(--rust-bright);margin-right:6px;
+  text-shadow:0 0 8px var(--rust-bright);
+  animation:blink 1.6s infinite;
+}
+@keyframes blink{0%,40%,100%{opacity:1}45%,90%{opacity:.2}}
+
+/* =====================================================
+   CARD
+   ===================================================== */
+.card{
+  --pad-x:26px;--pad-t:24px;--pad-b:22px;
+  width:480px;
+  background:var(--kraft);
+  color:var(--ink-hand);
+  padding:var(--pad-t) var(--pad-x) var(--pad-b);
+  position:relative;
+  font-family:var(--f-body-cn);
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(232,214,173,.55), transparent 60%),
+    radial-gradient(ellipse at 100% 100%, rgba(93,74,44,.42), transparent 65%),
+    radial-gradient(ellipse at 0% 100%, rgba(93,74,44,.28), transparent 55%),
+    var(--noise-kraft);
+  background-blend-mode:multiply,multiply,multiply,multiply;
+  box-shadow:
+    inset 0 1px 0 rgba(255,232,180,.55),
+    inset 0 -2px 0 rgba(0,0,0,.1),
+    0 1px 0 rgba(0,0,0,.2),
+    0 18px 32px -10px rgba(0,0,0,.62),
+    0 60px 100px -40px rgba(0,0,0,.55);
+  transform:rotate(-.5deg);
+  transition:transform .45s cubic-bezier(.2,.7,.2,1), box-shadow .45s ease;
+  clip-path:polygon(
+    0.6% 0.4%, 14% 0%, 38% 0.4%, 62% 0%, 86% 0.4%, 99% 0%,
+    100% 14%, 99.6% 38%, 100% 62%, 99.7% 86%, 100% 99.6%,
+    82% 100%, 58% 99.6%, 36% 100%, 14% 99.6%, 0% 100%,
+    0.4% 78%, 0% 54%, 0.4% 30%, 0% 8%
+  );
+}
+.card:hover{
+  transform:rotate(-.15deg) translateY(-6px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,232,180,.55),
+    inset 0 -2px 0 rgba(0,0,0,.1),
+    0 4px 0 rgba(0,0,0,.18),
+    0 30px 50px -10px rgba(0,0,0,.7),
+    0 90px 130px -40px rgba(0,0,0,.6);
+}
+.card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;pointer-events:none;
+  background:linear-gradient(90deg,
+    transparent 0%, rgba(232,214,173,.55) 14%, transparent 26%,
+    rgba(232,214,173,.4) 50%, transparent 62%,
+    rgba(232,214,173,.5) 84%, transparent 100%);
+}
+
+/* =====================================================
+   HEAD ROW — name strip + photo, flex
+   ===================================================== */
+.head-row{
+  display:flex;
+  gap:10px;
+  margin-bottom:16px;
+  align-items:stretch;
+}
+
+/* =====================================================
+   NAME STRIP — vertical title in dedicated tab (TCG style)
+   ===================================================== */
+.name-strip{
+  flex:0 0 54px;
+  position:relative;
+  background:
+    linear-gradient(180deg, var(--kraft-deep) 0%, var(--kraft-darker) 100%);
+  background-blend-mode:multiply;
+  border:1.5px solid var(--ink-black);
+  padding:14px 0;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  box-shadow:
+    inset 0 0 0 1px rgba(232,214,173,.22),
+    inset 0 14px 22px -14px rgba(0,0,0,.35),
+    inset 0 -14px 22px -14px rgba(0,0,0,.35),
+    0 1px 0 rgba(0,0,0,.15),
+    0 4px 8px -4px rgba(0,0,0,.3);
+}
+
+/* paper grain inside strip */
+.name-strip::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:var(--noise-kraft);
+  mix-blend-mode:multiply;
+  opacity:.55;
+}
+
+/* decorative corner notches — small filing-tab marks */
+.name-strip .corner{
+  position:absolute;
+  width:10px;height:10px;
+  border:1.5px solid var(--ink-black);
+  z-index:2;
+}
+.name-strip .corner.tl{top:4px;left:4px;border-right:none;border-bottom:none;}
+.name-strip .corner.tr{top:4px;right:4px;border-left:none;border-bottom:none;}
+.name-strip .corner.bl{bottom:4px;left:4px;border-right:none;border-top:none;}
+.name-strip .corner.br{bottom:4px;right:4px;border-left:none;border-top:none;}
+
+/* a small decoration above the name */
+.name-strip .crest{
+  font-family:var(--f-display-en);
+  font-size:8px;letter-spacing:.32em;
+  color:var(--ink-black);opacity:.7;
+  writing-mode:vertical-rl;
+  text-orientation:mixed;
+  z-index:1;
+  margin-top:4px;
+}
+
+/* the main vertical name */
+.name-strip .name{
+  writing-mode:vertical-rl;
+  text-orientation:upright;
+  font-family:var(--f-display-cn);
+  font-size:44px;
+  letter-spacing:.22em;
+  color:var(--ink-black);
+  font-weight:400;
+  line-height:1;
+  z-index:1;
+  text-shadow:0 1px 0 rgba(232,214,173,.35);
+}
+
+/* serial at the bottom — echoes the source's 年/月/日 boxes */
+.name-strip .serial-box{
+  border:1px solid var(--ink-black);
+  padding:5px 0;width:24px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(232,214,173,.18);
+  z-index:1;
+}
+.name-strip .serial-box span{
+  writing-mode:vertical-rl;
+  text-orientation:upright;
+  font-family:var(--f-display-cn);
+  font-size:13px;
+  color:var(--ink-black);
+  letter-spacing:.08em;
+  line-height:1;
+}
+
+/* =====================================================
+   PHOTO PLATE
+   ===================================================== */
+.plate{
+  flex:1;
+  position:relative;
+  aspect-ratio:4/5;
+  overflow:hidden;
+  background:var(--kraft-cream);
+  transform:rotate(.25deg);
+  box-shadow:
+    0 1px 0 rgba(140,117,73,.45),
+    0 6px 12px -4px rgba(20,12,6,.4),
+    0 14px 24px -10px rgba(20,12,6,.25);
+}
+.plate img{
+  width:100%;height:100%;display:block;
+  object-fit:cover;
+  object-position:50% 50%;
+  /* woodcut speaks for itself — no contrast/saturation tweaks needed */
+}
+.plate::after{
+  /* very subtle vignette only — print supplies its own texture */
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 70%, rgba(20,12,6,.18) 100%);
+  mix-blend-mode:multiply;
+}
+
+/* =====================================================
+   SEAL — woodcut-style red star chop, overlapping plate upper-right
+   ===================================================== */
+.seal{
+  position:absolute;
+  top:38px;right:4px;
+  width:68px;height:68px;
+  border:2.5px solid var(--rust);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--rust);
+  background:transparent;
+  mix-blend-mode:multiply;
+  opacity:.88;
+  transform:rotate(-9deg);
+  z-index:5;
+  filter:contrast(1.12);
+  box-shadow:inset 0 0 0 1px rgba(155,42,26,.35);
+}
+.seal::before{
+  content:"";position:absolute;inset:6px;
+  border:1.2px solid currentColor;border-radius:50%;
+}
+.seal .star{
+  font-size:30px;line-height:1;
+  font-family:var(--f-display-cn);
+  font-weight:700;
+}
+
+/* =====================================================
+   META STRIP BELOW HEAD-ROW
+   ===================================================== */
+.meta-strip{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 0 12px;
+  margin-bottom:14px;
+  border-bottom:1px solid var(--ink-hand);
+  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.32em;
+  color:var(--rust);text-transform:uppercase;
+}
+.meta-strip .chip{display:inline-flex;align-items:center;gap:8px;}
+.meta-strip .chip .sym{
+  width:18px;height:18px;border:1.2px solid currentColor;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:var(--f-display-cn);font-size:11px;letter-spacing:0;line-height:1;
+}
+.meta-strip .en{
+  font-family:var(--f-display-en);
+  font-size:18px;letter-spacing:.42em;
+  color:var(--ink-black);text-transform:uppercase;
+  font-style:normal;
+}
+
+/* =====================================================
+   DESC · ACTION · SOURCE
+   ===================================================== */
+.desc{
+  font-family:var(--f-body-cn);font-size:15.5px;line-height:1.85;
+  color:var(--ink-hand);
+  margin-bottom:14px;padding-bottom:14px;
+  border-bottom:1px dashed var(--kraft-edge);
+}
+.action{
+  display:flex;align-items:center;gap:12px;
+}
+.action .arrow{color:var(--rust);font-family:var(--f-body-en);font-size:22px;line-height:1;}
+.action .label{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.32em;color:var(--rust);text-transform:uppercase;}
+.action .value{font-family:var(--f-display-cn);font-size:22px;color:var(--ink-black);letter-spacing:.12em;line-height:1;margin-left:auto;}
+.source{
+  font-family:var(--f-body-cn);font-size:13px;line-height:1.7;
+  color:var(--rust-deep);font-style:italic;
+}
+.source::before{content:"〝";font-size:22px;vertical-align:-7px;margin-right:2px;opacity:.78;}
+.source::after{content:"〞";font-size:22px;vertical-align:-7px;margin-left:2px;opacity:.78;}
+.source cite{
+  display:block;font-style:normal;
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.32em;
+  color:var(--ink-hand);margin-top:4px;opacity:.75;text-transform:uppercase;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+@media (max-width:540px){
+  .card{width:92vw;--pad-x:20px;}
+  .name-strip{flex:0 0 44px;}
+  .name-strip .name{font-size:28px;letter-spacing:.14em;}
+  .action .value{font-size:18px;}
+  .meta-strip .en{font-size:14px;letter-spacing:.32em;}
+  .seal{width:62px;height:62px;top:38px;right:2px;}
+  .seal .core{font-size:18px;}
+  .seal .top,.seal .bot{font-size:7px;}
+}
+</style>
+</head>
+<body>
+
+  <header class="meta">
+    <span>WF · CARD · V0.6</span>
+    <span class="pulse">LIVE</span>
+    <span>2026.05.21</span>
+  </header>
+
+  <article class="card">
+
+    <div class="head-row">
+      <!-- VERTICAL NAME STRIP — TCG-style tab on the left -->
+      <div class="name-strip" aria-hidden="true">
+        <span class="corner tl"></span>
+        <span class="corner tr"></span>
+        <span class="corner bl"></span>
+        <span class="corner br"></span>
+        <span class="crest">W F</span>
+        <span class="name">持久战</span>
+        <span class="serial-box"><span>卷 二</span></span>
+      </div>
+
+      <!-- PHOTO PLATE -->
+      <figure class="plate" role="img" aria-label="持久战 · 战略档案插图">
+        <img src="./images/style-anchor.jpeg" alt="持久战 · 黄土高原山道木刻">
+      </figure>
+    </div>
+
+    <div class="meta-strip">
+      <span class="chip"><span class="sym">局</span>Situation · 局势</span>
+    </div>
+
+    <p class="desc">
+      我们的战争方针，就是持久战。
+    </p>
+
+    <div class="action">
+      <span class="arrow">→</span>
+      <span class="label">行动倾向</span>
+      <span class="value">不寻速胜</span>
+    </div>
+
+  </article>
+
+</body>
+</html>

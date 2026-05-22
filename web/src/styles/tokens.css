@@ -1,0 +1,39 @@
+/* =====================================================
+   星火 Wildfire — design tokens
+   shared with card-demo.html / cards-all.html / design.html
+   ===================================================== */
+:root {
+  /* palette */
+  --ink-black:#14110d;
+  --char-coal:#1b1611;
+  --char-coal-2:#241e16;
+  --kraft:#d4b886;
+  --kraft-deep:#b09668;
+  --kraft-darker:#9a8050;
+  --kraft-light:#e8d6ad;
+  --kraft-cream:#ecdcaf;
+  --kraft-shadow:#8c7549;
+  --kraft-edge:#5d4a2c;
+  --rust:#9b2a1a;
+  --rust-bright:#b53221;
+  --rust-deep:#5e1a10;
+  --army:#4d5238;
+  --army-deep:#2f3322;
+  --ink-hand:#2e2418;
+
+  /* fonts */
+  --f-display-cn:"ZCOOL XiaoWei","Noto Serif SC",serif;
+  --f-body-cn:"Noto Serif SC",serif;
+  --f-display-en:"IM Fell English SC",serif;
+  --f-body-en:"IM Fell English",serif;
+  --f-mono:"Special Elite","Courier New",monospace;
+  --f-brush:"Ma Shan Zheng",cursive;
+
+  /* noise textures */
+  --noise-kraft:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.27 0 0 0 0 0.13 0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  --noise-char:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0 0.04 0 0 0 0.45 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+
+  /* easing */
+  --ease-paper: cubic-bezier(.2,.7,.2,1);
+  --ease-flip: cubic-bezier(.65,0,.35,1);
+}
