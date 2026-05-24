@@ -4,11 +4,11 @@
     <div class="sc-holes"><b></b><b></b><b></b><b></b><b></b></div>
 
     <header class="sc-head">
-      <div class="sc-brand">星火<span class="en">WILDFIRE</span></div>
+      <div class="sc-brand">星火</div>
       <div class="sc-date">{{ date }}</div>
     </header>
 
-    <div class="sc-classify">— 战 略 简 报 · STRATEGIC BRIEFING —</div>
+    <div class="sc-classify">— 战 略 简 报 —</div>
 
     <!-- 3 cards -->
     <div class="sc-cards">

@@ -1,23 +1,12 @@
 <template>
   <main class="home">
-    <header class="meta">
-      <span>WF · {{ todayLabel }}</span>
-      <nav class="nav-links">
-        <button class="nav-link" type="button" @click="go('/timeline')">时 间 线</button>
-        <span class="nav-sep">·</span>
-        <button class="nav-link" type="button" @click="go('/archive')">档 案 库</button>
-      </nav>
-    </header>
-
     <section class="brand">
       <h1 class="brand-cn">星火</h1>
-      <div class="brand-en">WILDFIRE</div>
       <div class="brand-slogan">遇 事 不 决 · 抽 卡 毛 选</div>
     </section>
 
     <button class="cta" type="button" @click="onDraw">
       <span class="cta-cn">开 始 抽 卡</span>
-      <span class="cta-en">Draw · Three Cards</span>
     </button>
 
     <footer class="order">
@@ -32,6 +21,7 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useDrawStore } from '../stores/draw.js'
 import { randomOrder } from '../data/orders.js'
+import { unlockAudio, sfx } from '../utils/sfx.js'
 
 const router = useRouter()
 const drawStore = useDrawStore()
@@ -44,6 +34,8 @@ const todayLabel = computed(() => {
 })
 
 function onDraw () {
+  unlockAudio()      // unlock WebAudio inside this gesture
+  sfx.shuffle()
   drawStore.begin()
   router.push('/draw')
 }

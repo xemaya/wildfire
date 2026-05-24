@@ -8,7 +8,7 @@ import { DAILY_ORDERS } from './orders.js'
  * @param {Array<{system: string, title: string, desc: string, action: string}>} cards
  * @returns {{situation: string, risk: string, advice: string, command: string}}
  */
-export function mockBriefing (cards) {
+export function mockBriefing (cards, recent = []) {
   const bySystem = Object.fromEntries(cards.map(c => [c.system, c]))
   const used = new Set()
 
@@ -28,14 +28,16 @@ export function mockBriefing (cards) {
     return cards[0]
   }
 
-  const situationCard = pick(['situation', 'contradiction', 'morale'])
-  const riskCard      = pick(['contradiction', 'morale', 'strategy', 'organization'])
-  const adviceCard    = pick(['action', 'strategy', 'organization', 'situation', 'morale', 'contradiction'])
+  const xingshi  = pick(['xingshi', 'fangzhen', 'xingdong'])
+  const fangzhen = pick(['fangzhen', 'xingshi', 'xingdong'])
+  const xingdong = pick(['xingdong', 'fangzhen', 'xingshi'])
+  const q = c => c.quote || c.desc
 
+  const cont = recent.length ? `近期第 ${recent.length + 1} 次推演——` : ''
   return {
-    situation: `你当前的局面，是「${situationCard.title}」。${situationCard.desc}`,
-    risk:      `主要风险落在「${riskCard.title}」。${riskCard.desc}`,
-    advice:    `${adviceCard.desc} 行动方向：${adviceCard.action}。`,
+    situation: `${cont}你眼下的形势——${q(xingshi)}（《${xingshi.src || ''}》）`,
+    risk:      `方针上须把握「${q(fangzhen)}」，错了大方向越走越偏。`,
+    advice:    `落地行动——${q(xingdong)}`,
     command:   DAILY_ORDERS[Math.floor(Math.random() * DAILY_ORDERS.length)],
   }
 }

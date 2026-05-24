@@ -1,4 +1,5 @@
 import { mockBriefing } from '../data/mockBriefing.js'
+import { SYSTEMS } from '../data/cards.js'
 
 const TIMEOUT_MS = 20000
 
@@ -10,14 +11,15 @@ const TIMEOUT_MS = 20000
  *
  * @returns {Promise<{ briefing: {situation,risk,advice,command}, source: 'ai'|'mock' }>}
  */
-export async function fetchBriefing (cards) {
+export async function fetchBriefing (cards, recent = []) {
   const payload = {
     cards: cards.map(c => ({
-      card_type: c.system,
-      card_title: c.title,
-      card_desc: c.desc,
-      action_hint: c.action,
+      card_type: SYSTEMS[c.system]?.cn || c.system, // 形势 / 方针 / 行动
+      card_title: c.title,                          // 短标签
+      card_desc: c.quote || c.desc,                 // 毛选原话
+      action_hint: c.src ? `《${c.src}》` : '',      // 出处
     })),
+    recent, // 近期抽卡记录（连续性）
   }
 
   try {
@@ -35,6 +37,6 @@ export async function fetchBriefing (cards) {
     throw new Error('bad shape')
   } catch (e) {
     console.warn('[WF] briefing fell back to mock:', e.message)
-    return { briefing: mockBriefing(cards), source: 'mock' }
+    return { briefing: mockBriefing(cards, recent), source: 'mock' }
   }
 }

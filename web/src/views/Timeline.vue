@@ -1,19 +1,14 @@
 <template>
   <main class="timeline">
-    <header class="meta">
-      <button class="back-btn" @click="onBack">‹ 首 页</button>
-      <span>WF · 时 间 线</span>
-    </header>
-
     <h1 class="title">
       <span class="cn">战 略 时 间 线</span>
-      <span class="en">Archive · {{ history.length }} entries</span>
+      <span class="en">共 {{ history.length }} 次 推 演</span>
     </h1>
 
     <!-- empty state -->
     <div v-if="!history.length" class="empty">
       <div class="empty-cn">尚 无 档 案</div>
-      <div class="empty-en">— ARCHIVE EMPTY —</div>
+      <div class="empty-en">— 暂 无 推 演 记 录 —</div>
       <button class="empty-cta" @click="onDraw">开 始 抽 卡</button>
     </div>
 
@@ -33,7 +28,7 @@
             :key="card.id"
             class="entry-chip"
           >
-            <span class="chip-sys">{{ SYSTEMS[card.system].sym }}</span>
+            <span class="chip-sys">{{ sysOf(card.system).sym }}</span>
             <span class="chip-name">{{ card.title }}</span>
           </span>
         </div>
@@ -51,7 +46,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useDrawStore } from '../stores/draw.js'
-import { SYSTEMS } from '../data/cards.js'
+import { sysOf } from '../data/cards.js'
 
 const router = useRouter()
 const drawStore = useDrawStore()

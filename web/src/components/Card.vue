@@ -1,41 +1,31 @@
 <template>
-  <article class="wf-card" :class="{ locked, compact }">
-    <div class="head-row">
-      <!-- vertical name strip -->
-      <div class="name-strip">
-        <span class="corner tl"></span><span class="corner tr"></span>
-        <span class="corner bl"></span><span class="corner br"></span>
-        <span class="name">{{ locked ? '？' : card.title }}</span>
-        <span class="vol-box"><span>{{ locked ? '？' : card.vol }}</span></span>
-      </div>
+  <article
+    class="wf-card"
+    :class="{ locked, compact }"
+  >
+    <!-- rust inner frame -->
+    <span class="frame" aria-hidden="true"></span>
 
-      <!-- image plate -->
-      <figure class="plate">
-        <img v-if="img && !locked" :src="img" :alt="card.title" loading="lazy">
-        <div v-else class="placeholder" :class="{ 'is-locked': locked }">
-          <span class="ph-glyph">{{ locked ? '？' : sys.sym }}</span>
-          <span class="ph-note" v-if="!locked">未 制 图</span>
-        </div>
-      </figure>
-    </div>
+    <!-- category seal -->
+    <span class="seal">{{ locked ? '？' : sys.cn }}</span>
 
-    <template v-if="!compact">
-      <div class="meta-strip">
-        <span class="chip">
-          <span class="sym">{{ locked ? '？' : sys.sym }}</span>
-          <template v-if="locked">UNIDENTIFIED · 未 解 锁</template>
-          <template v-else>{{ sys.en }} · {{ sys.cn }}</template>
-        </span>
-      </div>
+    <!-- illustration plate -->
+    <figure class="plate">
+      <img v-if="img && !locked" :src="img" :alt="card.title" loading="lazy">
+      <div v-else class="ph"><span>{{ locked ? '？' : sys.sym }}</span></div>
+      <span class="plate-edge" aria-hidden="true"></span>
+    </figure>
 
-      <p class="desc">{{ locked ? '？ ？ ？' : card.desc }}</p>
+    <!-- quote = body -->
+    <blockquote class="quote">
+      <span class="text">{{ locked ? '？　？　？' : card.quote }}</span>
+    </blockquote>
 
-      <div class="action" v-if="!locked">
-        <span class="arrow">→</span>
-        <span class="label">行动倾向</span>
-        <span class="value">{{ card.action }}</span>
-      </div>
-    </template>
+    <!-- source + star -->
+    <footer class="foot" v-if="!compact">
+      <span class="src">{{ locked ? '《 ？ ？ 》' : '—《' + card.src + '》' }}</span>
+      <span class="star" aria-hidden="true">★</span>
+    </footer>
   </article>
 </template>
 
@@ -55,247 +45,127 @@ const img = computed(() => illustrationFor(props.card.id))
 </script>
 
 <style scoped>
-/* sizes scale with card width via container query units (cqw) */
 .wf-card {
   container-type: inline-size;
+  position: relative;
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 4.5cqw 4.5cqw 4cqw;
   background: var(--kraft);
   color: var(--ink-hand);
-  padding: 5cqw;
-  position: relative;
   font-family: var(--f-body-cn);
   background-image:
-    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(232,214,173,.55), transparent 60%),
-    radial-gradient(ellipse at 100% 100%, rgba(93,74,44,.42), transparent 65%),
+    radial-gradient(ellipse 95% 55% at 50% 0%, rgba(236,220,175,.6), transparent 62%),
+    radial-gradient(ellipse at 102% 104%, rgba(93,74,44,.5), transparent 60%),
     var(--noise-kraft);
   background-blend-mode: multiply, multiply, multiply;
   box-shadow:
-    inset 0 1px 0 rgba(255,232,180,.5),
-    0 1px 0 rgba(0,0,0,.2),
-    0 8px 18px -6px rgba(0,0,0,.5);
-  clip-path: polygon(
-    0.8% 0.5%, 14% 0%, 38% 0.5%, 62% 0%, 86% 0.5%, 99% 0%,
-    100% 14%, 99.6% 38%, 100% 62%, 99.7% 86%, 100% 99.5%,
-    82% 100%, 58% 99.5%, 36% 100%, 14% 99.5%, 0% 100%,
-    0.4% 78%, 0% 54%, 0.4% 30%, 0% 8%
-  );
+    inset 0 1px 0 rgba(255,236,188,.55),
+    0 2px 0 rgba(0,0,0,.25),
+    0 14px 26px -10px rgba(0,0,0,.6);
+  overflow: hidden;
 }
-.wf-card::before {
-  content: "";
-  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+/* rust double frame */
+.frame {
+  position: absolute;
+  inset: 2.4cqw;
+  border: 1px solid var(--rust);
+  box-shadow: inset 0 0 0 1.6cqw var(--kraft), inset 0 0 0 1.8cqw rgba(155,42,26,.55);
   pointer-events: none;
-  background: linear-gradient(90deg,
-    transparent 0%, rgba(232,214,173,.5) 26%, transparent 46%,
-    rgba(232,214,173,.4) 66%, transparent 100%);
+  mix-blend-mode: multiply;
+  opacity: .85;
 }
 .wf-card.locked {
   background: var(--kraft-darker);
   background-image:
-    repeating-linear-gradient(45deg, transparent 0 6px, rgba(20,17,13,.12) 6px 8px),
+    repeating-linear-gradient(45deg, transparent 0 6px, rgba(20,17,13,.13) 6px 8px),
     var(--noise-kraft);
   background-blend-mode: multiply, multiply;
 }
+.locked .frame { border-color: var(--kraft-shadow); box-shadow: inset 0 0 0 1.6cqw var(--kraft-darker); }
 
-/* ---------- head row ---------- */
-.head-row {
-  display: flex;
-  gap: 2.5cqw;
-  align-items: stretch;
-}
-
-/* name strip */
-.name-strip {
-  flex: 0 0 12cqw;
-  position: relative;
-  background: linear-gradient(180deg, var(--kraft-deep), var(--kraft-darker));
-  border: 1px solid var(--ink-black);
-  padding: 3cqw 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow:
-    inset 0 0 0 1px rgba(232,214,173,.22),
-    inset 0 6cqw 10cqw -8cqw rgba(0,0,0,.3);
-}
-.name-strip::after {
-  content: "";
-  position: absolute; inset: 0;
-  pointer-events: none;
-  background: var(--noise-kraft);
-  mix-blend-mode: multiply;
-  opacity: .5;
-}
-.corner {
+/* category seal — top-left, stamped */
+.seal {
   position: absolute;
-  width: 2cqw; height: 2cqw;
-  border: 1px solid var(--ink-black);
-  z-index: 2;
-}
-.corner.tl { top: 1.2cqw; left: 1.2cqw; border-right: none; border-bottom: none; }
-.corner.tr { top: 1.2cqw; right: 1.2cqw; border-left: none; border-bottom: none; }
-.corner.bl { bottom: 1.2cqw; left: 1.2cqw; border-right: none; border-top: none; }
-.corner.br { bottom: 1.2cqw; right: 1.2cqw; border-left: none; border-top: none; }
-
-.name {
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  font-family: var(--f-display-cn);
-  font-size: 8cqw;
-  letter-spacing: .16em;
-  color: var(--ink-black);
-  line-height: 1;
-  z-index: 1;
-}
-.vol-box {
-  border: 1px solid var(--ink-black);
-  padding: 1.2cqw 0;
-  width: 5.5cqw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(232,214,173,.18);
-  z-index: 1;
-}
-.vol-box span {
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  font-family: var(--f-display-cn);
-  font-size: 3cqw;
-  color: var(--ink-black);
-  letter-spacing: .06em;
-  line-height: 1;
-}
-
-/* image plate */
-.plate {
-  flex: 1;
-  position: relative;
-  aspect-ratio: 4/5;
-  overflow: hidden;
-  background: var(--char-coal);
-  transform: rotate(.3deg);
-  box-shadow:
-    0 1px 0 rgba(140,117,73,.4),
-    0 4px 10px -4px rgba(20,12,6,.4);
-}
-.plate img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  object-position: 50% 50%;
-}
-.placeholder {
-  width: 100%; height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2cqw;
-  background:
-    radial-gradient(ellipse at 40% 30%, rgba(232,214,173,.3), transparent 60%),
-    var(--noise-kraft),
-    var(--kraft-deep);
-  background-blend-mode: multiply, multiply, normal;
-}
-.placeholder .ph-glyph {
-  font-family: var(--f-display-cn);
-  font-size: 18cqw;
-  color: var(--kraft-shadow);
-  opacity: .55;
-  line-height: 1;
-}
-.placeholder .ph-note {
-  font-family: var(--f-mono);
-  font-size: 2.6cqw;
-  letter-spacing: .3em;
-  color: var(--kraft-shadow);
-  opacity: .7;
-}
-.placeholder.is-locked {
-  background:
-    repeating-linear-gradient(45deg, transparent 0 8px, rgba(20,17,13,.18) 8px 10px),
-    var(--char-coal);
-}
-.placeholder.is-locked .ph-glyph {
-  color: var(--rust);
-  opacity: .7;
-}
-
-/* ---------- meta strip ---------- */
-.meta-strip {
-  display: flex;
-  align-items: center;
-  margin-top: 3.5cqw;
-  padding-bottom: 2.5cqw;
-  border-bottom: 1px solid var(--ink-hand);
-  font-family: var(--f-mono);
-  font-size: 2.6cqw;
-  letter-spacing: .26em;
-  color: var(--rust);
-  text-transform: uppercase;
-}
-.locked .meta-strip { color: var(--kraft-shadow); }
-.meta-strip .chip { display: inline-flex; align-items: center; gap: 1.8cqw; }
-.meta-strip .chip .sym {
-  width: 4cqw; height: 4cqw;
-  border: 1px solid currentColor;
+  top: 4.4cqw; left: 4.4cqw;
+  z-index: 3;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--f-display-cn);
-  font-size: 2.6cqw;
-  letter-spacing: 0;
-}
-
-/* ---------- desc ---------- */
-.desc {
-  font-family: var(--f-body-cn);
-  font-size: 3.9cqw;
-  line-height: 1.8;
-  color: var(--ink-hand);
-  margin-top: 3cqw;
-}
-.locked .desc {
-  color: var(--kraft-shadow);
-  letter-spacing: .3em;
-}
-
-/* ---------- action ---------- */
-.action {
-  display: flex;
-  align-items: center;
-  gap: 2.5cqw;
-  margin-top: 3.5cqw;
-  padding-top: 3cqw;
-  border-top: 1px dashed var(--kraft-edge);
-}
-.action .arrow {
-  color: var(--rust);
-  font-family: var(--f-body-en);
-  font-size: 4.5cqw;
-  line-height: 1;
-}
-.action .label {
-  font-family: var(--f-mono);
-  font-size: 2.6cqw;
-  letter-spacing: .26em;
-  color: var(--rust);
-  text-transform: uppercase;
-}
-.action .value {
+  min-width: 11cqw;
+  padding: 1.6cqw 2.2cqw;
+  background: var(--rust);
+  color: var(--kraft-cream);
   font-family: var(--f-display-cn);
   font-size: 4.6cqw;
-  color: var(--ink-black);
-  letter-spacing: .1em;
+  letter-spacing: .14em;
   line-height: 1;
-  margin-left: auto;
+  box-shadow: 0 1px 0 rgba(0,0,0,.3), inset 0 0 0 1px rgba(236,220,175,.25);
+  transform: rotate(-1.5deg);
 }
+.locked .seal { background: var(--kraft-shadow); }
 
-/* ---------- compact (thumbnail) ---------- */
-.wf-card.compact { padding: 4cqw; }
-.wf-card.compact .name { font-size: 11cqw; }
-.wf-card.compact .name-strip { flex-basis: 16cqw; }
-.wf-card.compact .vol-box { width: 7cqw; }
-.wf-card.compact .vol-box span { font-size: 4cqw; }
-.wf-card.compact .placeholder .ph-glyph { font-size: 22cqw; }
+/* illustration plate */
+.plate {
+  position: relative;
+  width: 100%;
+  height: 42%;
+  flex: 0 0 auto;
+  margin-top: 1cqw;
+  overflow: hidden;
+  background: var(--char-coal);
+}
+.plate img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block; filter: saturate(.92) contrast(1.04); }
+.plate .ph {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(ellipse at 40% 30%, rgba(232,214,173,.3), transparent 60%), var(--kraft-deep);
+}
+.plate .ph span { font-family: var(--f-display-cn); font-size: 24cqw; color: var(--kraft-shadow); opacity: .5; }
+.plate-edge { position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(20,12,6,.55), inset 0 -6cqw 10cqw -8cqw rgba(0,0,0,.5); }
+.locked .plate { filter: grayscale(.4) brightness(.7); }
+
+/* quote */
+.quote {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 3.5cqw 1cqw 1cqw;
+}
+.quote .text {
+  font-family: var(--f-display-cn);
+  font-size: 6.2cqw;          /* 统一字号，不再随长短变化 */
+  line-height: 1.66;
+  letter-spacing: .03em;
+  color: var(--ink-black);
+  text-shadow: 0 1px 0 rgba(255,240,200,.4);
+}
+.locked .quote .text { color: var(--kraft-shadow); letter-spacing: .3em; }
+
+/* footer */
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2cqw;
+  padding-top: 2.4cqw;
+  border-top: 1px solid var(--kraft-edge);
+}
+.foot .src { font-family: var(--f-body-cn); font-size: 3.1cqw; letter-spacing: .06em; color: var(--rust); }
+.foot .star { font-family: var(--f-display-en); font-size: 4.4cqw; color: var(--rust); opacity: .9; line-height: 1; }
+.locked .foot .src, .locked .foot .star { color: var(--kraft-shadow); }
+
+/* ---------- compact (archive thumbnail) ---------- */
+.wf-card.compact { padding: 3.5cqw; }
+.wf-card.compact .frame { inset: 2cqw; }
+.wf-card.compact .seal { font-size: 3.6cqw; padding: 1.2cqw 1.8cqw; top: 3.4cqw; left: 3.4cqw; }
+.wf-card.compact .plate { height: 52%; }
+.wf-card.compact .quote { padding: 3cqw .5cqw 0; }
+.wf-card.compact .quote .text {
+  font-size: 4.4cqw; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
 </style>

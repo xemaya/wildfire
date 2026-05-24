@@ -1,20 +1,14 @@
 <template>
   <main class="archive">
-    <header class="meta">
-      <button class="back-btn" @click="onBack">‹ 首 页</button>
-      <span>WF · 档 案 库</span>
-    </header>
-
     <h1 class="title">
       <span class="cn">战 略 档 案 库</span>
-      <span class="en">Collection · {{ unlockedCount }} / {{ totalCount }}</span>
+      <span class="en">已 解 锁 {{ unlockedCount }} / {{ totalCount }}</span>
     </h1>
 
     <section v-for="(group, sysKey) in CARDS_BY_SYSTEM" :key="sysKey" class="sys-section">
       <div class="sys-head">
         <span class="sym">{{ SYSTEMS[sysKey].sym }}</span>
         <span class="name">{{ SYSTEMS[sysKey].cn }}</span>
-        <span class="en">{{ SYSTEMS[sysKey].en }}</span>
         <span class="count">{{ unlockedInSystem(sysKey) }} / {{ group.length }}</span>
       </div>
       <div class="grid">

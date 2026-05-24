@@ -1,13 +1,12 @@
 <template>
   <main class="brief" v-if="draw">
     <header class="meta">
-      <span>WF · 战 略 简 报</span>
-      <span class="pulse">{{ loading ? 'RECEIVING' : (source === 'ai' ? 'CABLE IN' : 'LOCAL') }}</span>
+      <span>星 火 · 战 略 简 报</span>
+      <span class="pulse">{{ loading ? '接 收 中' : (source === 'ai' ? '电 报 已 达' : '本 地 推 演') }}</span>
     </header>
 
     <h1 class="title">
       <span class="cn">战 略 简 报</span>
-      <span class="en">Strategic Briefing</span>
     </h1>
 
     <!-- the 3 drawn cards, tappable chips -->
@@ -27,23 +26,23 @@
     <div v-if="loading" class="loading">
       <div class="tele-cn">电 报 接 收 中</div>
       <div class="dots"><span></span><span></span><span></span></div>
-      <div class="tele-en">— Receiving Transmission —</div>
+      <div class="tele-en">— 前 线 拍 报 —</div>
     </div>
 
     <template v-else>
       <!-- 4 fields -->
       <section class="entry">
-        <div class="label"><span class="en">SITUATION</span><span class="cn">当前局势</span></div>
+        <div class="label"><span class="cn">当前局势</span></div>
         <p class="body">{{ briefing.situation }}</p>
       </section>
 
       <section class="entry">
-        <div class="label"><span class="en">RISK</span><span class="cn">当前风险</span></div>
+        <div class="label"><span class="cn">当前风险</span></div>
         <p class="body">{{ briefing.risk }}</p>
       </section>
 
       <section class="entry">
-        <div class="label"><span class="en">ADVICE</span><span class="cn">当前建议</span></div>
+        <div class="label"><span class="cn">当前建议</span></div>
         <p class="body">{{ briefing.advice }}</p>
       </section>
 
@@ -58,7 +57,6 @@
         <!-- P0: archive is the completion action — give it the weight -->
         <button class="btn-archive" @click="onArchive">
           <span class="cn">归 档 入 库</span>
-          <span class="en">Save to Timeline</span>
         </button>
         <!-- secondary row -->
         <div class="actions-sub">
@@ -134,7 +132,12 @@ onMounted(async () => {
     return
   }
   loading.value = true
-  const { briefing: b, source: s } = await fetchBriefing(drawStore.current.cards)
+  // 近期最多 5 次抽卡（不含本次），喂给参谋做连续性判断
+  const recent = drawStore.history.slice(0, 5).map(h => ({
+    日期: (h.drawnAt || '').slice(0, 10),
+    三卡: h.cards.map(c => ({ 类: SYSTEMS[c.system]?.cn || c.system, 语: c.desc || c.quote })),
+  }))
+  const { briefing: b, source: s } = await fetchBriefing(drawStore.current.cards, recent)
   briefing.value = b
   source.value = s
   drawStore.setBriefing(b)

@@ -13,7 +13,7 @@ import http from 'node:http'
 const PORT = process.env.PORT || 8787
 const API_KEY = process.env.DEEPSEEK_API_KEY || ''
 const API_URL = process.env.DEEPSEEK_API_URL || 'https://api.deepseek.com/chat/completions'
-const MODEL = process.env.DEEPSEEK_MODEL || 'deepseek-chat'
+const MODEL = process.env.DEEPSEEK_MODEL || 'deepseek-v4-flash'
 
 // ---- locked system prompt (PRD §12) ----
 const SYSTEM_PROMPT = `你是"星火 Wildfire"的战略参谋系统。
@@ -29,6 +29,10 @@ const SYSTEM_PROMPT = `你是"星火 Wildfire"的战略参谋系统。
 3. 指出潜在风险
 4. 给出一个战略方向
 5. 生成一句"今日军令"
+
+若提供了"用户近期抽卡记录"，要结合其最近的处境趋势来判断，让简报有连续性：
+例如反复出现防御/相持＝长期被动、该考虑转主动；反复出现冒进＝该收敛节奏。
+只在判断里体现这种趋势，不要罗列或复述历史。
 
 语言风格：冷静、克制、有战略感、不鸡汤、不夸张、不安慰、不玄学。
 你不是在"治愈用户"，你是在"分析一场人生战局"。
@@ -69,9 +73,14 @@ function sanitize (b) {
   }
 }
 
-async function callDeepSeek (cards) {
-  const userContent =
+async function callDeepSeek (cards, recent) {
+  let userContent =
     '请分析以下三张战略卡：\n' + JSON.stringify({ cards }, null, 2)
+  if (Array.isArray(recent) && recent.length) {
+    userContent +=
+      '\n\n【用户近期抽卡记录 · 由近及远，供你判断连续性，勿罗列】：\n' +
+      JSON.stringify(recent.slice(0, 5), null, 2)
+  }
 
   const resp = await fetch(API_URL, {
     method: 'POST',
@@ -120,7 +129,7 @@ const server = http.createServer(async (req, res) => {
       return
     }
     try {
-      const { cards } = JSON.parse(await readBody(req) || '{}')
+      const { cards, recent } = JSON.parse(await readBody(req) || '{}')
       if (!Array.isArray(cards) || cards.length !== 3) {
         res.writeHead(400, { 'Content-Type': 'application/json' })
         res.end(JSON.stringify({ error: 'bad_cards' }))
@@ -130,7 +139,7 @@ const server = http.createServer(async (req, res) => {
       let briefing = null
       for (let attempt = 0; attempt < 2; attempt++) {
         try {
-          briefing = await callDeepSeek(cards)
+          briefing = await callDeepSeek(cards, recent)
           if (validate(briefing)) break
         } catch (e) {
           if (attempt === 1) throw e
