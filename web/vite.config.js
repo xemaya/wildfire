@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
+  // Served under /wildfire/ on the games hub.
+  base: '/wildfire/',
   plugins: [vue()],
   server: {
     host: true,

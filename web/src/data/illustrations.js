@@ -119,6 +119,10 @@ export const ILLUSTRATIONS = {
 
 const PLACEHOLDER = '/images/style-anchor.jpeg'
 
+// Prefix the deploy base so images resolve when served under a subpath
+// (e.g. /wildfire/). BASE_URL keeps its trailing slash, so strip the leading
+// one off the stored path to avoid a double slash.
 export function illustrationFor (cardId) {
-  return ILLUSTRATIONS[cardId] || PLACEHOLDER
+  const path = ILLUSTRATIONS[cardId] || PLACEHOLDER
+  return import.meta.env.BASE_URL + path.replace(/^\//, '')
 }
